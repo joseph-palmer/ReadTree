@@ -9,15 +9,20 @@ __license__ = "License for this code/"
 import os
 import subprocess
 import ast
+from datetime import datetime
 
 # Get the name of the directory the code is ran.
 dirname = os.path.basename(os.getcwd())
 
-# Read the tree into the README document.
-os.system("tree > README")
+# Read the tree into the README document. - Need to get ifnore files from gitignore
+ignore = open("../.gitignore").read()
+gitignore = "|".join([i.strip() for i in ignore.split("\n") if i])
+dirignore = "|Results|__pycache__"
+ignore = "tree -I '{}{}' > README.md".format(gitignore, dirignore)
+os.system(ignore)
 
 # Read the README file.
-with open("README", "r") as myfile:
+with open("README.md", "r") as myfile:
     data = myfile.read()
 
 # --- get the documentation for all the files in Code. ---
@@ -37,7 +42,7 @@ def GetPyDocStr(f):
 # and description.
 codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/") if ".py" in item]
 for i in codelist_py:
-    data = data.replace(i[0], "{} : {}".format(i[0], i[-1]))
+    data = data.replace(i[0], "{} : {}".format(i[0], i[-1].replace("\n", " ")))
 
 ## Shell ##
 def GetShDocStr(f):
@@ -59,6 +64,13 @@ for i in codelist_sh:
     data = data.replace(i, "{} : {}".format(i, GetShDocStr(i)))
 
 # Write the file
-with open("README", "w") as writer:
-    writer.write("README document for CMEECourseWork {}\n".format(dirname))
-    writer.write(data)
+introstring = ("# README Document for CMEECourseWork {}\n"
+               "## Author: Joseph Palmer - _joseph.palmer18@imperial.ac.uk_\n"
+               "## Date: _{}_\n\n"
+               "```\n{}\n```".format(dirname,
+                                     datetime.now().strftime('%h - %Y'),
+                                     data))
+
+
+with open("README.md", "w") as writer:
+    writer.write("{}\n".format(introstring))
