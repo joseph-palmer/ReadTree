@@ -6,29 +6,14 @@ __version__ = "0.0.1"
 __license__ = "License for this code/"
 
 ## imports ##
+import sys
 import os
 import subprocess
 import ast
 from datetime import datetime
 
-# Get the name of the directory the code is ran.
-dirname = os.path.basename(os.getcwd())
-
-# Read the tree into the README document. - Need to get ifnore files from gitignore
-ignore = open("../.gitignore").read()
-gitignore = "|".join([i.strip() for i in ignore.split("\n") if i])
-dirignore = "|Results|__pycache__"
-ignore = "tree -I '{}{}' > README.md".format(gitignore, dirignore)
-os.system(ignore)
-
-# Read the README file.
-with open("README.md", "r") as myfile:
-    data = myfile.read()
-
-# --- get the documentation for all the files in Code. ---
-
-## Python ##
-def GetPyDocStr(f):
+## Functions ##
+def GetPyDocStr(f): 
     """GetPyDocStr - Gets the docstring from a given python script.
 
     :param f: The python file provided.
@@ -37,14 +22,6 @@ def GetPyDocStr(f):
         tree = ast.parse(filename.read())
     return (f, ast.get_docstring(tree))
 
-
-# Make tuple of filename and docstring, replace filename in data with filename
-# and description.
-codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/") if ".py" in item]
-for i in codelist_py:
-    data = data.replace(i[0], "{} : {}".format(i[0], i[-1].replace("\n", " ")))
-
-## Shell ##
 def GetShDocStr(f):
     """GetShDocStr - Gets the docstring from a given Shell script.
 
@@ -56,21 +33,61 @@ def GetShDocStr(f):
     formated = str(hosts_out).split(": ")[-1].replace("\\n", " ")
     return formated
 
+def main(argv):
+    """main - Where the magic happens!
 
-# Make tuple of filename and docstring, replace filename in data with filename
-# and description.
-codelist_sh = [item for item in os.listdir("Code/") if ".sh" in item]
-for i in codelist_sh:
-    data = data.replace(i, "{} : {}".format(i, GetShDocStr(i)))
+    :param argv:
+    """
+    # Get the name of the directory the code is ran.
+    dirname = os.path.basename(os.getcwd())
 
-# Write the file
-introstring = ("# README Document for CMEECourseWork {}\n"
-               "## Author: Joseph Palmer - _joseph.palmer18@imperial.ac.uk_\n"
-               "## Date: _{}_\n\n"
-               "```\n{}\n```".format(dirname,
-                                     datetime.now().strftime('%h - %Y'),
-                                     data))
+    # Read the tree into the README document. - Need to get ifnore files from gitignore
+    ignore = open("../.gitignore").read()
+    gitignore = "|".join([i.strip() for i in ignore.split("\n") if i])
+    dirignore = "|Results|__pycache__"
+    ignore = "tree -I '{}{}' > README.md".format(gitignore, dirignore)
+    os.system(ignore)
+
+    # Read the README file.
+    with open("README.md", "r") as myfile:
+        data = myfile.read()
+
+    # --- get the documentation for all the files in Code. ---
+
+    ## Python ##
+
+    # Make tuple of filename and docstring, replace filename in data with filename
+    # and description.
+    codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/") if ".py" in item]
+    for i in codelist_py:
+        data = data.replace(i[0], "{} : {}".format(i[0], i[-1].replace("\n", " ")))
+
+    ## Shell ##
+
+    # Make tuple of filename and docstring, replace filename in data with filename
+    # and description.
+    codelist_sh = [item for item in os.listdir("Code/") if ".sh" in item]
+    for i in codelist_sh:
+        data = data.replace(i, "{} : {}".format(i, GetShDocStr(i)))
+
+    # Write the file
+    introstring = ("# README Document for CMEECourseWork {}\n"
+                   "## Author: Joseph Palmer - _joseph.palmer18@imperial.ac.uk_\n"
+                   "## Date: _{}_\n\n"
+                   "### Description: [Enter description for project here]\n"
+                   "\n### Tree map\n"
+                   "```\n{}\n```".format(dirname,
+                                         datetime.now().strftime('%h - %Y'),
+                                         data))
+
+    with open("README.md", "w") as writer:
+        writer.write("{}\n".format(introstring))
+
+    return 0
 
 
-with open("README.md", "w") as writer:
-    writer.write("{}\n".format(introstring))
+## Run the code ##
+if __name__ == "__main__":
+    status = main(sys.argv)
+    print("README.md Created in Current Working Directory.")
+    sys.exit(status)
