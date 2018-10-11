@@ -7,7 +7,7 @@
 3) The code is only to be used where you have the directory structure used in the CMEE course. i.e. Week1/[Code, Data, Results, etc]
 4) Navigate to the directory containing these directories. e.g. Week1. Then in the terminal type 'ReadTree'. This will create a file called README.md in the current working directory containg the tree as well as some into stuff you should fill in.
 5) The code files (at least python and bash ones) will show the docstrings providing you have recorded them in the original file. For bash, you must have a line that says 'Description: (Desc: will also work)' for it to extract the files description. Python requires you have made a docstring for the script.
-6) The code here uses your .gitignore file in the main directory (CMEECourseWork) to decide what to represent in tree. All pychache folders are also excluded, as is the results directory as the code contained should results.
+6) The code here uses your .gitignore file in the main directory (CMEECourseWork) to decide what to represent in tree. All pychache folders are also excluded, as is the results directory as the code contained should create results.
 
 Have a look at the example README file bellow I created for my week1. If you have any ideas to improve this feel free to contribute.
 
