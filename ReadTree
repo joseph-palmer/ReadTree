@@ -45,7 +45,7 @@ def GetShDocStr(f):
 
     :param f: The shell script provided.
     """
-    hosts_process = subprocess.Popen(["grep", "Desc", f],
+    hosts_process = subprocess.Popen(["grep", "Desc", "Code/{}".format(f)],
             stdout = subprocess.PIPE)
     hosts_out, hosts_err = hosts_process.communicate()
     formated = str(hosts_out).split(": ")[-1].replace("\\n", " ")

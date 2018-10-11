@@ -1,0 +1,16 @@
+README document for CMEECourseWork ReadTree
+.
+├── Code
+│   ├── Example.py : An Example python script.
+│   └── Example.sh : Description of a shell script. '
+├── Data
+│   ├── Example1.txt
+│   ├── Example2.csv
+│   └── Example3.fasta
+├── README
+├── README.md
+├── ReadTree
+└── Results
+    └── ResultsFile.csv
+
+3 directories, 9 files
