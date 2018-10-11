@@ -4,6 +4,18 @@
 
 1) Make sure you have Tree installed (type Tree into terminal to check, if not do sudo apt install Tree)
 2) Copy the file ReadTree to your local bin which should be in your path. This is to make sure it is executable from anywhere.
+
+    If the above statment was confusing just do the following:
+
+    In the terminal type ```mkdir ~/bin``` to make a directory called bin in your home directory.
+    Next type ```gedit ~/.bashrc``` to open the file in a text editor.
+    find some space in the file that opens but dont delete anything!.
+    Type ```export PATH="$HOME/bin:$PATH"```into some free space. Save it and then close the file.
+    Back in the terminal type `source ~/.bashrc`
+    In the terminal ```cd``` to where ever you git cloned ReadTree.
+    Type ```cp ReadTree ~/bin/ReadTree``` to put the file in your bin.
+    You can now use ReadTree from anywhere on your computer.
+
 3) The code is only to be used where you have the directory structure used in the CMEE course. i.e. Week1/[Code, Data, Results, etc]
 4) Navigate to the directory containing these directories. e.g. Week1. Then in the terminal type 'ReadTree'. This will create a file called README.md in the current working directory containg the tree as well as some into stuff you should fill in.
 __Note:__ You need to modify the source code on your own machine. In the python file ReadTree at the bottom you will see this line ```"## Author: Joseph Palmer - _joseph.palmer18@imperial.ac.uk_\n"```. Just change this to your own details before using the code.
