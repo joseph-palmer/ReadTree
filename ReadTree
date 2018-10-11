@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Makes a README file for a given directory"""
+__appname__ = "MakeReadme.py"
+__author__ = "Joseph Palmer <joseph.palmer18@imperial.ac.uk>"
+__version__ = "0.0.1"
+__license__ = "License for this code/"
+
+## imports ##
+import os
+import subprocess
+import ast
+
+# Get the name of the directory the code is ran.
+dirname = os.path.basename(os.getcwd())
+
+# Read the tree into the README document.
+os.system("tree > README")
+
+# Read the README file.
+with open("README", "r") as myfile:
+    data = myfile.read()
+
+# --- get the documentation for all the files in Code. ---
+
+## Python ##
+def GetPyDocStr(f):
+    """GetPyDocStr - Gets the docstring from a given python script.
+
+    :param f: The python file provided.
+    """
+    with open("Code/" + f, "r") as filename:
+        tree = ast.parse(filename.read())
+    return (f, ast.get_docstring(tree))
+
+
+# Make tuple of filename and docstring, replace filename in data with filename
+# and description.
+codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/") if ".py" in item]
+for i in codelist_py:
+    data = data.replace(i[0], "{} : {}".format(i[0], i[-1]))
+
+## Shell ##
+def GetShDocStr(f):
+    """GetShDocStr - Gets the docstring from a given Shell script.
+
+    :param f: The shell script provided.
+    """
+    hosts_process = subprocess.Popen(["grep", "Desc", f],
+            stdout = subprocess.PIPE)
+    hosts_out, hosts_err = hosts_process.communicate()
+    formated = str(hosts_out).split(": ")[-1].replace("\\n", " ")
+    return formated
+
+
+# Make tuple of filename and docstring, replace filename in data with filename
+# and description.
+codelist_sh = [item for item in os.listdir("Code/") if ".sh" in item]
+for i in codelist_sh:
+    data = data.replace(i, "{} : {}".format(i, GetShDocStr(i)))
+
+# Write the file
+with open("README", "w") as writer:
+    writer.write("README document for CMEECourseWork {}\n".format(dirname))
+    writer.write(data)
