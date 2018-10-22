@@ -33,6 +33,21 @@ def GetShDocStr(f):
     formated = str(hosts_out).split(": ")[-1].replace("\\n", " ")
     return formated
 
+def GetRDocStr(f):
+    """GetShDocStr - Gets the docstring from a given R script.
+
+    :param f: The R script provided.
+    """
+    hosts_process = subprocess.Popen(["head", "-1", "Code/{}".format(f)],
+            stdout = subprocess.PIPE)
+    hosts_out, hosts_err = hosts_process.communicate()
+    if "###" not in str(hosts_out):
+        return "No Name Given"
+    else:
+        print(hosts_out)
+        formated = str(hosts_out).split("### ")[-1].replace("\\n", " ")
+        return formated
+
 def main(argv):
     """main - Where the magic happens!
 
@@ -69,6 +84,11 @@ def main(argv):
     codelist_sh = [item for item in os.listdir("Code/") if ".sh" in item]
     for i in codelist_sh:
         data = data.replace(i, "{} : {}".format(i, GetShDocStr(i)))
+
+    ## R ##
+    codelist_R = [item for item in os.listdir("Code/") if ".R" in item]
+    for i in codelist_R:
+        data = data.replace(i, "{} : {}".format(i, GetRDocStr(i)))
 
     # Write the file
     introstring = ("# README Document for CMEECourseWork {}\n"
