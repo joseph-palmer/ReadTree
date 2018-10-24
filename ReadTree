@@ -65,9 +65,10 @@ def main(argv):
 
     # Read the tree into the README document. - Need to get ifnore files from gitignore
     ignore = open("../.gitignore").read()
-    gitignore = "|".join([i.strip() for i in ignore.split("\n") if i])
+    gitignore = "|".join([i.strip() for i in ignore.split("\n") if "#" not in i])
     dirignore = "|Results|__pycache__"
-    ignore = "tree -I '{}{}' > README.md".format(gitignore, dirignore)
+    ignore = "tree -I '{}{}' > README.md".format(gitignore,
+                                                 dirignore).replace("||", "|")
     os.system(ignore)
 
     # Read the README file.
