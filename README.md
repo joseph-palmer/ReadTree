@@ -24,7 +24,11 @@ __Note:__ You need to modify the source code on your own machine. In the python 
 
 Have a look at the example README file bellow I created for my week1. If you have any ideas to improve this feel free to contribute.
 
+---
+# Updates
 
+* _24/10/2018_ - Added code to read docstrings for R (Just make sure you have a line in the R scripts that says '# Desc:' or '# Description:') as the code uses this to extract everything after this as an explanation.
+* _24/10/2018_ - Added code to show the title for latex documents (.tex). This goes through the .tex files and extracts the title of your document. 
 
 ---
 
