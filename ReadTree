@@ -18,9 +18,15 @@ def GetPyDocStr(f):
 
     :param f: The python file provided.
     """
-    with open("Code/" + f, "r") as filename:
-        tree = ast.parse(filename.read())
-    return (f, ast.get_docstring(tree))
+    try:
+        with open("Code/" + f, "r") as filename:
+            tree = ast.parse(filename.read())
+        return (f, ast.get_docstring(tree))
+    # use bare except here as python error could be any error at this stage.
+    except:
+        exit("There is a problem with the python script '{}'"
+             "\nUnable to create README until this is fixed."
+             "\nRun this code to check the error.".format(f))
 
 def GetShDocStr(f):
     """GetShDocStr - Gets the docstring from a given Shell script.
@@ -63,54 +69,74 @@ def main(argv):
     # Get the name of the directory the code is ran.
     dirname = os.path.basename(os.getcwd())
 
-    # Read the tree into the README document. - Need to get ifnore files from gitignore
+    # Get description from previous README.md files, if they exist
+    if os.path.exists("README.md"):
+        with open("README.md", "r") as prev_readme:
+            data = "".join([i for i in prev_readme.readlines()])
+        prev_desc = data.split("Description: ")[-1].split("### Tree map")[0]
+    else:
+        prev_desc = "[Enter description for project here]\n"
+
+    # Read the tree into a temporary README document.
+    # - Need to get ignore files from gitignore
     ignore = open("../.gitignore").read()
-    gitignore = "|".join([i.strip() for i in ignore.split("\n") if "#" not in i])
+    gitignore = "|".join([i.strip() for i in ignore.split("\n")
+                          if "#" not in i])
     dirignore = "|Results|__pycache__"
-    ignore = "tree -I '{}{}' > README.md".format(gitignore,
-                                                 dirignore).replace("||", "|")
+    ignore = "tree -I '{}{}' > README.tmp".format(gitignore,
+                                                  dirignore).replace("||", "|")
     os.system(ignore)
 
     # Read the README file.
-    with open("README.md", "r") as myfile:
+    with open("README.tmp", "r") as myfile:
         data = myfile.read()
+
+    # remove the README.tmp file
+    os.system("rm README.tmp")
 
     # --- get the documentation for all the files in Code. ---
 
     ## Python ##
 
-    # Make tuple of filename and docstring, replace filename in data with filename
-    # and description.
-    codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/") if item.endswith(".py")]
+    # Make tuple of filename and docstring, replace filename in data with
+    # filename and description.
+    codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/")
+                   if item.endswith(".py")]
     for i in codelist_py:
-        data = data.replace(i[0], "{} : {}".format(i[0], i[-1].replace("\n", " ")))
+        data = data.replace(i[0], "{} : {}".format(i[0],
+                                                   i[-1].replace("\n", " ")))
 
     ## Shell ##
 
-    # Make tuple of filename and docstring, replace filename in data with filename
-    # and description.
-    codelist_sh = [item for item in os.listdir("Code/") if item.endswith(".sh")]
+    # Make tuple of filename and docstring, replace filename in data
+    # with filename and description.
+    codelist_sh = [item for item in os.listdir("Code/")
+                   if item.endswith(".sh")]
     for i in codelist_sh:
         data = data.replace(i, "{} : {}".format(i, GetShDocStr(i)))
 
     ## R ##
-    codelist_R = [item for item in os.listdir("Code/") if item.endswith(".R")]
+    codelist_R = [item for item in os.listdir("Code/")
+                  if item.endswith(".R")]
     for i in codelist_R:
         data = data.replace(i, "{} : {}".format(i, GetRDocStr(i)))
 
     ## Latex ##
-    codelist_latex = [item for item in os.listdir("Code/") if item.endswith(".tex")]
+    codelist_latex = [item for item in os.listdir("Code/")
+                      if item.endswith(".tex")]
     for i in codelist_latex:
         data = data.replace(i, "{} : {}".format(i, GetLatexTitle(i)))
 
     # Write the file
     introstring = ("# README Document for CMEECourseWork {}\n"
-                   "## Author: Joseph Palmer - _joseph.palmer18@imperial.ac.uk_\n"
+                   "## Author: Joseph Palmer - "
+                   "_joseph.palmer18@imperial.ac.uk_\n"
                    "## Date: _{}_\n\n"
-                   "### Description: [Enter description for project here]\n"
+                   "### Description: {}"
                    "\n### Tree map\n"
                    "```\n{}\n```".format(dirname,
                                          datetime.now().strftime('%h - %Y'),
+                                         prev_desc,
                                          data))
 
     with open("README.md", "w") as writer:

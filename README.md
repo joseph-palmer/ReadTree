@@ -28,8 +28,9 @@ Have a look at the example README file bellow I created for my week1. If you hav
 # Updates
 
 * _24/10/2018_ - Added code to read docstrings for R (Just make sure you have a line in the R scripts that says '# Desc:' or '# Description:') as the code uses this to extract everything after this as an explanation.
-* _24/10/2018_ - Added code to show the title for latex documents (.tex). This goes through the .tex files and extracts the title of your document. 
-
+* _24/10/2018_ - Added code to show the title for latex documents (.tex). This goes through the .tex files and extracts the title of your document.
+* _25/10/2018_ - Added code to catch errors in python files so it shows a more constructive error message. Now it will tell you what python file has failed and needs correcting.
+* _25/10/2018_ - Added code to prevent ReadTree from over writing previous descriptions when updating README. Now when you run ReadTree when a README.md document already exists, the description is carried over to the new README document. 
 ---
 
 __Example README.md__
