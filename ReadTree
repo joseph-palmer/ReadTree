@@ -82,7 +82,7 @@ def main(argv):
     ignore = open("../.gitignore").read()
     gitignore = "|".join([i.strip() for i in ignore.split("\n")
                           if "#" not in i])
-    dirignore = "|Results|__pycache__"
+    dirignore = "|__pycache__"
     ignore = "tree -I '{}{}' > README.tmp".format(gitignore,
                                                   dirignore).replace("||", "|")
     os.system(ignore)
