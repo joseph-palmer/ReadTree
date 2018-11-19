@@ -104,9 +104,13 @@ def main(argv):
     # filename and description.
     codelist_py = [GetPyDocStr(item) for item in os.listdir("Code/")
                    if item.endswith(".py")]
-    for i in codelist_py:
-        data = data.replace(i[0], "{} : {}".format(i[0],
-                                                   i[-1].replace("\n", " ")))
+    # raise error if docstring not found
+    try:
+        for i in codelist_py:
+            data = data.replace(i[0], "{} : {}".format(i[0],
+                                                       i[-1].replace("\n", " ")))
+    except AttributeError:
+        sys.exit("You dont appear to have a docstring for {}".format(i))
 
     ## Shell ##
 
