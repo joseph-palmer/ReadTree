@@ -11,6 +11,7 @@ import os
 import subprocess
 import ast
 from datetime import datetime
+import re
 
 ## Functions ##
 def GetPyDocStr(f): 
@@ -73,7 +74,8 @@ def main(argv):
     if os.path.exists("README.md"):
         with open("README.md", "r") as prev_readme:
             data = "".join([i for i in prev_readme.readlines()])
-        prev_desc = data.split("Description: ")[-1].split("### Tree map")[0]
+        test = re.search(r"Description:(\s[\w\W]+)### Tree", data)
+        prev_desc = "".join(test.groups())
     else:
         prev_desc = "[Enter description for project here]\n"
 
